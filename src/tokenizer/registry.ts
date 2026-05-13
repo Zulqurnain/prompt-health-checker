@@ -5,7 +5,7 @@ import { metaAdapter } from "./adapters/meta";
 import { mistralAdapter } from "./adapters/mistral";
 import { xaiAdapter } from "./adapters/xai";
 import { deepseekAdapter } from "./adapters/deepseek";
-import type { TokenizerAdapterResult } from "./types";
+import type { TokenEstimate } from "@/types";
 
 const adapters = [
   openaiAdapter,
@@ -21,6 +21,6 @@ export function estimateAllFamilies(
   text: string,
   wordCount: number,
   charCount: number
-): TokenizerAdapterResult[] {
+): TokenEstimate[] {
   return adapters.map((adapter) => adapter.estimate(text, wordCount, charCount));
 }

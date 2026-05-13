@@ -75,7 +75,7 @@ export interface RewrittenPrompts {
 export interface TokenEstimate {
   family: string;
   icon: string;
-  tokenizerMode: "cl100k_base" | "sentencepiece" | "gemini_spm" | "heuristic";
+  tokenizerMode: "cl100k_base" | "o200k_base" | "sentencepiece" | "gemini_spm" | "heuristic";
   confidence: ConfidenceLevel;
   inputTokens: number;
   safeOutputBudget: number;

@@ -30,7 +30,6 @@ export const STRENGTH_THRESHOLDS = {
 } as const;
 
 // Minimum prompt length for a "complete" prompt (chars)
-export const MIN_PROMPT_CHARS = 80;
 export const MIN_PROMPT_WORDS = 12;
 export const VERBOSE_THRESHOLD_WORDS = 500;
 
