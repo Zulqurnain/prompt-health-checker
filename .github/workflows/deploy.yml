@@ -38,7 +38,7 @@ jobs:
             **/.git*/**
             **/node_modules/**
 
-      - name: Fix permissions via SSH
+      - name: Fix permissions and diagnose via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.FTP_SERVER }}
@@ -46,7 +46,25 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: YOUR_SFTP_PORT
           script: |
-            chmod -R 755 ~/tools.zulqurnainj.com/prompt-health-checker/
-            find ~/tools.zulqurnainj.com/prompt-health-checker/ -type f -exec chmod 644 {} \;
-            echo "Permissions fixed"
-            ls -la ~/tools.zulqurnainj.com/prompt-health-checker/
+            echo "=== Home dir ==="
+            ls -la ~/
+
+            echo "=== tools.zulqurnainj.com root ==="
+            ls -la ~/tools.zulqurnainj.com/ 2>/dev/null || echo "DIRECTORY NOT FOUND"
+
+            echo "=== prompt-health-checker dir ==="
+            ls -la ~/tools.zulqurnainj.com/prompt-health-checker/ 2>/dev/null || echo "DIR NOT FOUND"
+
+            echo "=== Checking public_html tools ==="
+            ls -la ~/public_html/ 2>/dev/null | grep -i tool || echo "no tools in public_html"
+
+            echo "=== All subdomain dirs ==="
+            ls -d ~/*/  2>/dev/null
+
+            echo "=== Fixing perms ==="
+            chmod -R 755 ~/tools.zulqurnainj.com/ 2>/dev/null || true
+            find ~/tools.zulqurnainj.com/ -type f -exec chmod 644 {} \; 2>/dev/null || true
+
+            echo "=== Write test file to verify web root ==="
+            echo "ok" > ~/tools.zulqurnainj.com/test-deploy.txt
+            echo "Test file written"
