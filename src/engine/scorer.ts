@@ -1,0 +1,144 @@
+import {
+  SCORE_WEIGHTS,
+  PENALTIES,
+  STRENGTH_THRESHOLDS,
+  MIN_PROMPT_WORDS,
+  VERBOSE_THRESHOLD_WORDS,
+} from "@/config/scoring";
+import type {
+  ScoreBreakdown,
+  StrengthLabel,
+  StructureComponents,
+  WeakWordMatch,
+  AmbiguityIssue,
+} from "@/types";
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+export function calculateBreakdown(
+  text: string,
+  wordCount: number,
+  structure: StructureComponents,
+  weakWords: WeakWordMatch[],
+  ambiguityIssues: AmbiguityIssue[]
+): ScoreBreakdown {
+  const lower = text.toLowerCase();
+
+  // Clarity: does it have a clear, direct task verb? is it short enough to parse?
+  let clarity = 0;
+  if (structure.task) clarity += 8;
+  if (wordCount >= MIN_PROMPT_WORDS) clarity += 4;
+  if (!lower.includes("?") || lower.indexOf("?") === lower.lastIndexOf("?")) clarity += 3;
+  clarity = clamp(clarity, 0, SCORE_WEIGHTS.clarity);
+
+  // Specificity: details, numbers, named entities, concrete nouns
+  let specificity = 0;
+  if (/\d+/.test(text)) specificity += 4;
+  if (wordCount >= 30) specificity += 4;
+  if (wordCount >= 60) specificity += 3;
+  if (/["'`]/.test(text)) specificity += 2;
+  if (/\b(specifically|exactly|precisely|in particular)\b/i.test(text)) specificity += 2;
+  specificity = clamp(specificity, 0, SCORE_WEIGHTS.specificity);
+
+  // Context: background, situation, project info
+  let context = 0;
+  if (structure.context) context += 7;
+  if (wordCount >= 40) context += 3;
+  context = clamp(context, 0, SCORE_WEIGHTS.context);
+
+  // Constraints: limits, restrictions, boundaries
+  const constraints = structure.constraints
+    ? clamp(7 + (wordCount >= 30 ? 3 : 0), 0, SCORE_WEIGHTS.constraints)
+    : clamp(wordCount >= 50 ? 2 : 0, 0, SCORE_WEIGHTS.constraints);
+
+  // Output format: explicit format specification
+  const outputFormat = structure.outputFormat
+    ? SCORE_WEIGHTS.outputFormat
+    : 0;
+
+  // Examples: sample inputs/outputs provided
+  const examples = structure.examples ? SCORE_WEIGHTS.examples : 0;
+
+  // Audience: defined target reader
+  const audience = structure.audience ? SCORE_WEIGHTS.audience : 0;
+
+  // Tone: style direction given
+  const tone = structure.tone ? SCORE_WEIGHTS.tone : 0;
+
+  // Predictability: role + task + format = AI knows exactly what to do
+  let predictability = 0;
+  if (structure.role) predictability += 3;
+  if (structure.task) predictability += 3;
+  if (structure.outputFormat) predictability += 2;
+  if (structure.successCriteria) predictability += 2;
+  predictability = clamp(predictability, 0, SCORE_WEIGHTS.predictability);
+
+  // Completeness: overall coverage of required info
+  const presentCount = Object.values(structure).filter(Boolean).length;
+  const completeness = clamp(
+    Math.round((presentCount / 9) * SCORE_WEIGHTS.completeness),
+    0,
+    SCORE_WEIGHTS.completeness
+  );
+
+  // Penalties
+  const weakWordPenalty = clamp(
+    weakWords.length * PENALTIES.perWeakWord,
+    PENALTIES.maxWeakWordPenalty,
+    0
+  );
+  const ambiguityPenalty = clamp(
+    ambiguityIssues.reduce((sum, i) => sum + i.penalty, 0),
+    PENALTIES.maxAmbiguityPenalty,
+    0
+  );
+  const verbosityPenalty =
+    wordCount > VERBOSE_THRESHOLD_WORDS ? PENALTIES.excessiveVerbosityPenalty : 0;
+
+  const penalties = clamp(
+    weakWordPenalty + ambiguityPenalty + verbosityPenalty,
+    -25,
+    0
+  );
+
+  return {
+    clarity,
+    specificity,
+    context,
+    constraints,
+    outputFormat,
+    examples,
+    audience,
+    tone,
+    predictability,
+    completeness,
+    penalties,
+  };
+}
+
+export function calculateTotalScore(breakdown: ScoreBreakdown): number {
+  const positive =
+    breakdown.clarity +
+    breakdown.specificity +
+    breakdown.context +
+    breakdown.constraints +
+    breakdown.outputFormat +
+    breakdown.examples +
+    breakdown.audience +
+    breakdown.tone +
+    breakdown.predictability +
+    breakdown.completeness;
+
+  const total = positive + breakdown.penalties;
+  return clamp(Math.round(total), 0, 100);
+}
+
+export function getStrengthLabel(score: number): StrengthLabel {
+  if (score >= STRENGTH_THRESHOLDS.Expert) return "Expert";
+  if (score >= STRENGTH_THRESHOLDS.Strong) return "Strong";
+  if (score >= STRENGTH_THRESHOLDS.Good) return "Good";
+  if (score >= STRENGTH_THRESHOLDS.Fair) return "Fair";
+  return "Weak";
+}
