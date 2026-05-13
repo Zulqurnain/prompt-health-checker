@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /prompt-health-checker/
+          server-dir: /tools.zulqurnainj.com/prompt-health-checker/
           exclude: |
             **/.git*
             **/.git*/**
