@@ -1,8 +1,9 @@
 import { estimateStandard } from "../heuristic";
-import type { TokenizerAdapter, TokenizerAdapterResult } from "../types";
+import type { TokenEstimate } from "@/types";
+import type { TokenizerAdapter } from "../types";
 
 export const openaiAdapter: TokenizerAdapter = {
-  estimate(text, _wordCount, _charCount): TokenizerAdapterResult {
+  estimate(text, _wordCount, _charCount): TokenEstimate {
     const inputTokens = estimateStandard(text);
     const contextWindow = 128_000;
     const safeOutputBudget = Math.min(4096, contextWindow - inputTokens);
@@ -17,7 +18,7 @@ export const openaiAdapter: TokenizerAdapter = {
       totalEstimate: inputTokens + safeOutputBudget,
       contextWindow,
       note:
-        "Estimated using cl100k_base-like ratio (~4 chars/token). Actual count requires running tiktoken. ChatGPT and API usage may differ due to system prompts and tool wrappers.",
+        "Estimated using cl100k_base-like ratio (~4 chars/token). Exact count requires running tiktoken. ChatGPT and API usage may differ due to system prompts and tool wrappers.",
       models: ["GPT-4o", "GPT-4 Turbo", "GPT-4o mini", "GPT-3.5 Turbo"],
     };
   },

@@ -5,25 +5,6 @@ export type TokenizerMode =
   | "gemini_spm"       // Google Gemini
   | "heuristic";       // Fallback approximation
 
-export type ConfidenceLevel =
-  | "Exact"
-  | "High Confidence"
-  | "Estimated"
-  | "Low Confidence";
-
-export interface TokenizerAdapterResult {
-  family: string;
-  icon: string;
-  tokenizerMode: TokenizerMode;
-  confidence: ConfidenceLevel;
-  inputTokens: number;
-  safeOutputBudget: number;
-  totalEstimate: number;
-  contextWindow: number;
-  note: string;
-  models: string[];
-}
-
 export interface TokenizerAdapter {
-  estimate(text: string, wordCount: number, charCount: number): TokenizerAdapterResult;
+  estimate(text: string, wordCount: number, charCount: number): import("@/types").TokenEstimate;
 }

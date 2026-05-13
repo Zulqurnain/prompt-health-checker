@@ -1,8 +1,9 @@
 import { estimateStandard } from "../heuristic";
-import type { TokenizerAdapter, TokenizerAdapterResult } from "../types";
+import type { TokenEstimate } from "@/types";
+import type { TokenizerAdapter } from "../types";
 
 export const xaiAdapter: TokenizerAdapter = {
-  estimate(text, _wordCount, _charCount): TokenizerAdapterResult {
+  estimate(text, _wordCount, _charCount): TokenEstimate {
     const inputTokens = estimateStandard(text);
     const contextWindow = 131_072;
     const safeOutputBudget = Math.min(4096, contextWindow - inputTokens);
