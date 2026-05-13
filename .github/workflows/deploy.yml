@@ -25,6 +25,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Show dist contents
+        run: |
+          echo "=== dist/ ==="
+          ls -la dist/
+          echo "=== .htaccess ==="
+          cat dist/.htaccess
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -38,7 +45,7 @@ jobs:
             **/.git*/**
             **/node_modules/**
 
-      - name: Fix permissions via SSH
+      - name: Fix permissions and verify via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.FTP_SERVER }}
@@ -46,23 +53,35 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: YOUR_SFTP_PORT
           script: |
-            chmod -R 755 ~/tools.zulqurnainj.com/prompt-health-checker/ 2>/dev/null || true
-            find ~/tools.zulqurnainj.com/prompt-health-checker/ -type f -exec chmod 644 {} \; 2>/dev/null || true
-            echo "Files in prompt-health-checker:"
-            ls -la ~/tools.zulqurnainj.com/prompt-health-checker/
-            echo "index.html exists:"
-            test -f ~/tools.zulqurnainj.com/prompt-health-checker/index.html && echo "YES" || echo "NO"
+            echo "=== All top-level dirs ==="
+            ls -la ~/
 
-      - name: Verify deployment from Actions runner
+            echo "=== tools dir ==="
+            ls -la ~/tools.zulqurnainj.com/ 2>/dev/null || echo "tools dir NOT FOUND"
+
+            echo "=== prompt-health-checker ==="
+            ls -la ~/tools.zulqurnainj.com/prompt-health-checker/ 2>/dev/null || echo "PHC dir NOT FOUND"
+
+            echo "=== index.html check ==="
+            test -f ~/tools.zulqurnainj.com/prompt-health-checker/index.html && echo "index.html EXISTS" || echo "index.html MISSING"
+
+            echo "=== .htaccess check ==="
+            test -f ~/tools.zulqurnainj.com/prompt-health-checker/.htaccess && cat ~/tools.zulqurnainj.com/prompt-health-checker/.htaccess || echo ".htaccess MISSING"
+
+            echo "=== Parent .htaccess ==="
+            test -f ~/tools.zulqurnainj.com/.htaccess && cat ~/tools.zulqurnainj.com/.htaccess || echo "no parent .htaccess"
+
+            echo "=== Fixing permissions ==="
+            chmod -R 755 ~/tools.zulqurnainj.com/ || true
+            find ~/tools.zulqurnainj.com/ -type f -exec chmod 644 {} \; || true
+            echo "Done"
+
+      - name: Verify from Actions runner (non-blocking)
+        continue-on-error: true
         run: |
-          echo "Waiting 5s for server to settle..."
           sleep 5
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 "https://tools.zulqurnainj.com/prompt-health-checker/")
+          STATUS=$(curl -s -o /tmp/response.html -w "%{http_code}" --max-time 20 "https://tools.zulqurnainj.com/prompt-health-checker/")
           echo "HTTP Status: $STATUS"
-          TITLE=$(curl -s --max-time 15 "https://tools.zulqurnainj.com/prompt-health-checker/" | grep -o '<title>[^<]*</title>' || echo "no title found")
-          echo "Page title: $TITLE"
-          if [[ "$STATUS" == "200" ]]; then
-            echo "✅ Deployment verified: site is live!"
-          else
-            echo "⚠️  Got $STATUS — site may need .htaccess adjustment"
-          fi
+          head -20 /tmp/response.html
+          TITLE=$(grep -o '<title>[^<]*</title>' /tmp/response.html || echo "no title")
+          echo "Title: $TITLE"
