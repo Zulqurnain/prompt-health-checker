@@ -37,3 +37,16 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+
+      - name: Fix permissions via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: YOUR_SFTP_PORT
+          script: |
+            chmod -R 755 ~/tools.zulqurnainj.com/prompt-health-checker/
+            find ~/tools.zulqurnainj.com/prompt-health-checker/ -type f -exec chmod 644 {} \;
+            echo "Permissions fixed"
+            ls -la ~/tools.zulqurnainj.com/prompt-health-checker/
