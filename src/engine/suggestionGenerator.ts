@@ -77,7 +77,7 @@ export function generateSuggestions(
       type: "add_success_criteria",
       priority: "low",
       title: "Define success criteria",
-      description: "State what a correct response looks like: "The response is good if it covers X, Y, and Z."",
+      description: "State what a correct response looks like: 'The response is good if it covers X, Y, and Z.'",
     });
   }
 
