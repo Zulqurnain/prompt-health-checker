@@ -1,4 +1,3 @@
-import { clsx } from "clsx";
 import type { PromptHistoryItem } from "@/types";
 import { StrengthBadge } from "./Badge";
 import { deleteHistoryItem } from "@/utils/localStorage";
@@ -78,5 +77,3 @@ export function HistoryPanel({ history, onSelect, onDelete, onClear }: HistoryPa
     </div>
   );
 }
-
-export { clsx };
