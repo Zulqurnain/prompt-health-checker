@@ -23,7 +23,7 @@ jobs:
         with:
           switches: -avz --delete
           path: dist/
-          remote_path: /var/www/zulqurnainj.com/out/prompt-health-checker/
+          remote_path: /var/www/prompt-health-checker/
           remote_host: ${{ secrets.VPS_HOST }}
           remote_user: ${{ secrets.VPS_USER }}
           remote_key: ${{ secrets.VPS_SSH_KEY }}
