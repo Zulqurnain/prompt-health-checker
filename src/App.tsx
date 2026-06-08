@@ -95,7 +95,7 @@ export default function App() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-1.5 text-xs font-medium text-sky-400 bg-sky-500/10 border border-sky-500/20 rounded-full px-3 py-1 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse-slow" />
-            Free · No signup · Runs locally
+            Free · No signup · Runs locally · v1.1
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-50 mb-3 leading-tight">
             Prompt Health Checker
