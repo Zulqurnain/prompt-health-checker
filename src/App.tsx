@@ -65,16 +65,10 @@ export default function App() {
             </div>
             <div>
               <div className="text-sm font-semibold text-slate-100 leading-none">Prompt Health Checker</div>
-              <div className="text-[10px] text-slate-500 leading-none mt-0.5">by zulqurnainj.com</div>
+              <div className="text-[10px] text-slate-500 leading-none mt-0.5">prompt analysis tool</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href="https://zulqurnainj.com/saas"
-              className="text-xs text-slate-500 hover:text-slate-300 transition-colors hidden sm:block"
-            >
-              More Tools
-            </a>
             <a
               href="https://github.com/Zulqurnain/prompt-health-checker"
               target="_blank"
@@ -166,11 +160,7 @@ export default function App() {
             reflect your prompt text only, using character/word heuristics.
           </p>
           <p className="text-xs text-slate-700">
-            Built by{" "}
-            <a href="https://zulqurnainj.com" className="text-slate-500 hover:text-slate-300 transition-colors">
-              Zulqurnain Haider
-            </a>{" "}
-            · Open source on{" "}
+            Open source on{" "}
             <a
               href="https://github.com/Zulqurnain/prompt-health-checker"
               target="_blank"
