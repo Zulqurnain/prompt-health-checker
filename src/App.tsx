@@ -65,16 +65,10 @@ export default function App() {
             </div>
             <div>
               <div className="text-sm font-semibold text-slate-100 leading-none">Prompt Health Checker</div>
-              <div className="text-[10px] text-slate-500 leading-none mt-0.5">by zulqurnainj.com</div>
+              <div className="text-[10px] text-slate-500 leading-none mt-0.5">prompt analysis tool</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href="https://zulqurnainj.com/saas"
-              className="text-xs text-slate-500 hover:text-slate-300 transition-colors hidden sm:block"
-            >
-              More Tools
-            </a>
             <a
               href="https://github.com/Zulqurnain/prompt-health-checker"
               target="_blank"
@@ -95,7 +89,7 @@ export default function App() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-1.5 text-xs font-medium text-sky-400 bg-sky-500/10 border border-sky-500/20 rounded-full px-3 py-1 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse-slow" />
-            Free · No signup · Runs locally
+            Free · No signup · Runs locally · v1.1
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-50 mb-3 leading-tight">
             Prompt Health Checker
@@ -166,11 +160,7 @@ export default function App() {
             reflect your prompt text only, using character/word heuristics.
           </p>
           <p className="text-xs text-slate-700">
-            Built by{" "}
-            <a href="https://zulqurnainj.com" className="text-slate-500 hover:text-slate-300 transition-colors">
-              Zulqurnain Haider
-            </a>{" "}
-            · Open source on{" "}
+            Open source on{" "}
             <a
               href="https://github.com/Zulqurnain/prompt-health-checker"
               target="_blank"
