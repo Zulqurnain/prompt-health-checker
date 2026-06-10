@@ -2,8 +2,6 @@
 
 **Analyze prompt quality, estimate tokens across AI model families, and strengthen prompts before sending to AI.**
 
-Live at: [tools.zulqurnainj.com/prompt-health-checker](https://tools.zulqurnainj.com/prompt-health-checker)
-
 ---
 
 ## Features
@@ -88,25 +86,7 @@ dist/
 
 ### 3. Upload to cPanel
 
-Upload the contents of `dist/` to your cPanel hosting under:
-
-```
-public_html/tools/prompt-health-checker/
-```
-
-Or if `tools.zulqurnainj.com` is a subdomain/addon domain pointing to its own folder:
-
-```
-public_html/prompt-health-checker/
-```
-
-**Use cPanel File Manager or SFTP (port YOUR_SFTP_PORT):**
-
-```
-Host:     your-hosting-server.com
-Port:     YOUR_SFTP_PORT (SFTP)
-Username: your-cpanel-username
-```
+Upload the contents of `dist/` to your web server under the desired path (e.g. `/prompt-health-checker/`).
 
 ### 4. Verify .htaccess is in place
 
@@ -118,12 +98,12 @@ Vite is configured with `base: "/prompt-health-checker/"` in `vite.config.ts`. A
 
 ### 6. Test
 
-Visit: `https://tools.zulqurnainj.com/prompt-health-checker/`
+Visit: `https://your-domain.com/prompt-health-checker/`
 
 If assets 404, check that:
 - Files are in the right folder
 - `.htaccess` is present and readable
-- `mod_rewrite` is enabled (it is on Namecheap Shared hosting)
+- `mod_rewrite` is enabled
 
 ---
 
@@ -173,4 +153,4 @@ src/
 
 MIT — free to use, modify, and deploy.
 
-Built by [Zulqurnain Haider](https://zulqurnainj.com)
+MIT — free to use, modify, and deploy.
