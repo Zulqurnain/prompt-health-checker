@@ -154,3 +154,7 @@ src/
 MIT — free to use, modify, and deploy.
 
 MIT — free to use, modify, and deploy.
+
+## Recent changes
+
+- 2026-10-20: Commit history tidied up: every commit is now credited to Zulqurnain.
